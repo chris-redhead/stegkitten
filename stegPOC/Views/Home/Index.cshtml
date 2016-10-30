@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<h1>Upload your evil image</h1>
+
+<h3 class="text-warning">@ViewBag.message</h3>
+@using (Html.BeginForm("Upload","Home",FormMethod.Post, new { name="evilfile", enctype="multipart/form-data"}))
+{
+    <input type="file" id="evilfile" name="evilfile" />
+
+    <input type="submit" />
+}
