@@ -1,9 +1,9 @@
 ﻿
 @{
-    ViewBag.Title = "Set Encryption Key";
+    ViewBag.Title = "Enter Encryption Key";
 }
 
-<h2>SetEncKey</h2>
+<h2>@ViewBag.Title</h2>
 
 @using (Html.BeginForm("Decrypt", "Decrypt", FormMethod.Post, new { }))
 {

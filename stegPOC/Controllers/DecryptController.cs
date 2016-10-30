@@ -70,7 +70,7 @@ namespace stegPOC.Controllers
                                 }
                                 catch(Exception e)
                                 {
-
+                                    return View("invalidKey");
                                 }
                             }
                         }

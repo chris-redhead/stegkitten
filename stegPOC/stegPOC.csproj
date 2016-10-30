@@ -250,6 +250,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Decrypt\Decrypt.cshtml" />
     <Content Include="Views\Decrypt\SetEncKey.cshtml" />
+    <Content Include="Views\Decrypt\InvalidKey.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
