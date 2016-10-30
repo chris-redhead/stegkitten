@@ -12,18 +12,21 @@ namespace stegPOC.Controllers
 {
     public class HomeController : Controller
     {
-        private static int hiddenChunkLength = 400;
+        private static int hiddenChunkLength = 350;
+        public static List<string> urlList = new List<string>();
 
         [HttpGet]
         // GET: /<controller>/
-        public ActionResult Index()
-        {
-            return View();
+        public async Task<ActionResult> Index()
+        {            
+            return View();           
         }
 
         [HttpPost]
         public async Task<ActionResult> Upload(HttpPostedFileBase evilfile)
         {
+            urlList = new List<string>();
+
             byte[] imageBytes;
             List<byte[]> chunkList = new List<byte[]>();
 
@@ -47,18 +50,22 @@ namespace stegPOC.Controllers
             int counter = 0;
             foreach (var chunk in chunkList)
             {
-                Encode(chunk, @"C:\cats\cat" + counter + ".jpg");
+                await Encode(chunk, @"C:\cats\cat" + counter + ".jpg");
                 counter++;
             }
 
-
-            ViewBag.message = "Successfully uploaded";
+            //add all images to album
+            var albumId = await imgurConnector.CreateAlbum(urlList);
+            var url = "https://imgur.com/a/" + albumId;
+            ViewBag.albumId = albumId;
+            ViewBag.url = url;
+            ViewBag.message = true;
             return View("Index");
         }
 
         private static string fullstring = "";
 
-        private void Encode(byte[] chunk,string fileName)
+        private async Task Encode(byte[] chunk,string fileName)
         {
             int quality = 100;
 
@@ -76,6 +83,10 @@ namespace stegPOC.Controllers
 
                     jpg.Compress(s, password);
                 }
+
+                //open file and write to imgur
+                var id = await imgurConnector.PostImage(System.IO.File.Open(fileName, System.IO.FileMode.Open));
+                urlList.Add(id);
             }
         }
 
@@ -90,13 +101,17 @@ namespace stegPOC.Controllers
         }
 
         public static Random ran = new Random();
-
         public static System.IO.Stream GetCleanImage()
         {
-
+            //347-341x461-464 is ok
             using (WebClient client = new WebClient())
             {
-                return client.OpenRead($"https://placekitten.com/{300 + ran.Next(100)}/{500 + ran.Next(100)}");
+                int counterA = ran.Next(3);
+                int counterB = ran.Next(3);
+                int width = 347 + counterA; //300 + ran.Next(100)
+                int height = 461 + counterB; //400 + ran.Next(100)
+
+                return client.OpenRead($"https://placekitten.com/{width}/{height}");
             }
         }
 

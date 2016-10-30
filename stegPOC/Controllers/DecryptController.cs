@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -11,10 +13,12 @@ namespace stegPOC.Controllers
     public class DecryptController : Controller
     {
         // GET: Decrypt
-        public ActionResult Index()
+        public async Task<ActionResult> Index(string albumId)
         {
             DirectoryInfo dInfo = new DirectoryInfo(@"C:\cats");
 
+            var urlList = await imgurConnector.getPhotoIdsFromAlbum(albumId);
+            var otherlist = imgurConnector.idList;
 
             string password = "banana";
 
@@ -23,39 +27,55 @@ namespace stegPOC.Controllers
             var fullstring = "";
 
             var files = dInfo.GetFiles().OrderBy(x => x.CreationTime);
-            foreach (var file in files)
+            
+            foreach (string url in urlList)
             {
-                using (var stream = new MemoryStream())
+                using (var client = new HttpClient())
                 {
-                    using (JpegExtract extractor = new JpegExtract(stream, password))
+                    var imageResult = await client.GetAsync(url);
+
+                    using (MemoryStream inputStream = new MemoryStream())
                     {
-                        extractor.Extract(file.Open(FileMode.Open));
+                        await imageResult.Content.CopyToAsync(inputStream);
+                        inputStream.Seek(0, SeekOrigin.Begin);
 
-                        stream.Seek(0, SeekOrigin.Begin);
-                        var sr = new StreamReader(stream);
+                        using (var outputStream = new MemoryStream())
+                        {
+                            using (JpegExtract extractor = new JpegExtract(outputStream, password))
+                            {
+                                extractor.Extract(inputStream);
 
-                        string bytestring = sr.ReadToEnd();
-                        bytestring = sanitiseByteString(bytestring);
+                                outputStream.Seek(0, SeekOrigin.Begin);
+                                var sr = new StreamReader(outputStream);
 
-                        fullstring += bytestring;
+                                string bytestring = sr.ReadToEnd();
+                                bytestring = sanitiseByteString(bytestring);
 
-                        byte[] block = Convert.FromBase64String(bytestring); //EncodingHelper.DecodeToByteArray(bytestring);
+                                fullstring += bytestring;
+                                try
+                                {
+                                    byte[] block = Convert.FromBase64String(bytestring); //EncodingHelper.DecodeToByteArray(bytestring);
 
-                        image = combineArrays(image, block);
+                                    image = combineArrays(image, block);
+                                }
+                                catch(Exception e)
+                                {
+
+                                }
+                            }
+                        }
                     }
                 }
-            }
+            }              
 
-           
-
-
-
+            /*
             using (var outputImage = System.IO.File.Open(@"C:\dog.jpg", FileMode.Create))
             {
                 outputImage.Write(image, 0, image.Length);
             }
+            */
 
-                return View();
+            return File(image, "image/jpeg");
         }
 
         public static byte[] combineArrays(byte[] a, byte[] b)

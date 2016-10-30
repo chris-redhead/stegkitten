@@ -3,7 +3,11 @@
 }
 <h1>Upload your evil image</h1>
 
-<h3 class="text-warning">@ViewBag.message</h3>
+@if (ViewBag.message == true)
+{  
+    <h3 class="text-warning">Image gallery successfully created <a href="@ViewBag.url">here</a></h3>
+    <h3 class="text-warning"><a href="/Decrypt?albumId=@ViewBag.albumId">Decrypt here</a></h3>
+}
 @using (Html.BeginForm("Upload","Home",FormMethod.Post, new { name="evilfile", enctype="multipart/form-data"}))
 {
     <input type="file" id="evilfile" name="evilfile" />
