@@ -12,7 +12,7 @@ namespace stegPOC.Controllers
 {
     public class DecryptController : Controller
     {
-        public async Task<ActionResult> Index(string albumId)
+        public async Task<ActionResult> Index(string albumId = "")
         {
             ViewBag.albumId = albumId;
             return View("SetEncKey");

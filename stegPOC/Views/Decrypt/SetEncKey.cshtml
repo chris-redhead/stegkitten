@@ -7,10 +7,15 @@
 
 @using (Html.BeginForm("Decrypt", "Decrypt", FormMethod.Post, new { }))
 {
-    <input typeof="text" id="encryptionKey" name="encryptionKey" />
-
-        @Html.Hidden("albumId", (string)ViewBag.albumId)
-
-        <input type="submit" />
+    <div class="form-group">
+        <label for="albumId">Imgur Album Id</label>
+        @Html.TextBox("albumId", (string)ViewBag.albumId, new { @class = "form-control"})
+    </div>
+    <div class="form-group">
+        <label for="encryptionKey">Encryption Key</label>
+        <input typeof="text" id="encryptionKey" name="encryptionKey" class="form-control" />
+    </div>
+    
+    <button type="submit" class="btn btn-default" >Get Decrypted Image</button>
 }
 

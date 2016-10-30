@@ -5,14 +5,21 @@
 
 @if (ViewBag.message == true)
 {  
-    <h3 class="text-warning">Image gallery successfully created <a href="@ViewBag.url">here</a></h3>
-    <h3 class="text-warning"><a href="/Decrypt?albumId=@ViewBag.albumId">Decrypt here</a></h3>
+    <h6 class="text-warning">Image gallery successfully created <a href="@ViewBag.url">here</a></h6>
+    <h6 class="text-warning"><a href="/Decrypt?albumId=@ViewBag.albumId">Decrypt here</a></h6>
+    <h6 class="text-warning">Your Imgur album code is @ViewBag.albumId</h6>
 }
-@using (Html.BeginForm("Upload","Home",FormMethod.Post, new { name="evilfile", enctype="multipart/form-data"}))
+@using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { name = "evilfile", enctype = "multipart/form-data" }))
 {
-    <input typeof="text" id="encryptionKey" name="encryptionKey" />
+    <div class="form-group">
+        <label for="encryptionKey">Encryption Key</label>
+        <input type="text" id="encryptionKey" name="encryptionKey" class="form-control" />
+    </div>
 
-    <input type="file" id="evilfile" name="evilfile" />
+    <div class="form-group">
+        <label for="evilfile">File Location</label>
+        <input type="file" id="evilfile" name="evilfile" class="form-control" />
+    </div>
 
-    <input type="submit" />
-}
+        <button type="submit" class="btn btn-default" >Create Decrypted Image</button>
+        }
