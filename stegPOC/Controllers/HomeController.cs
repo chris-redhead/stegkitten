@@ -12,7 +12,7 @@ namespace stegPOC.Controllers
 {
     public class HomeController : Controller
     {
-        private static int hiddenChunkLength = 350;
+        private static int hiddenChunkLength = 600; //550;
         public static List<string> urlList = new List<string>();
 
         [HttpGet]
@@ -23,7 +23,7 @@ namespace stegPOC.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Upload(HttpPostedFileBase evilfile)
+        public async Task<ActionResult> Upload(HttpPostedFileBase evilfile,  string encryptionKey)
         {
             urlList = new List<string>();
 
@@ -50,7 +50,7 @@ namespace stegPOC.Controllers
             int counter = 0;
             foreach (var chunk in chunkList)
             {
-                await Encode(chunk, @"C:\cats\cat" + counter + ".jpg");
+                await Encode(chunk, @"C:\cats\cat" + counter + ".jpg", encryptionKey);
                 counter++;
             }
 
@@ -65,13 +65,12 @@ namespace stegPOC.Controllers
 
         private static string fullstring = "";
 
-        private async Task Encode(byte[] chunk,string fileName)
+        private async Task Encode(byte[] chunk,string fileName, string password)
         {
             int quality = 100;
 
             string plaintext = Convert.ToBase64String(chunk); //EncodingHelper.EncodeToString(chunk);
             fullstring += plaintext;
-            string password = "banana";
 
             using (var s = GenerateStreamFromString(plaintext))
             {

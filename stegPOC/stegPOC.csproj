@@ -248,7 +248,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Decrypt\Index.cshtml" />
+    <Content Include="Views\Decrypt\Decrypt.cshtml" />
+    <Content Include="Views\Decrypt\SetEncKey.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

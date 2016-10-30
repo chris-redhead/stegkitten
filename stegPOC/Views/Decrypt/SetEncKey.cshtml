@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewBag.Title = "Set Encryption Key";
+}
+
+<h2>SetEncKey</h2>
+
+@using (Html.BeginForm("Decrypt", "Decrypt", FormMethod.Post, new { }))
+{
+    <input typeof="text" id="encryptionKey" name="encryptionKey" />
+
+        @Html.Hidden("albumId", (string)ViewBag.albumId)
+
+        <input type="submit" />
+}
+

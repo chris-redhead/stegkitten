@@ -1,0 +1,9 @@
+﻿
+@{
+    ViewBag.Title = "Decrypt";
+}
+
+<h2>Decrypt</h2>
+
+<img src="@Url.Action("GetImage", new { albumId = ViewBag.albumId, encryptionKey = ViewBag.encryptionKey })" alt="Your super secret image" />
+

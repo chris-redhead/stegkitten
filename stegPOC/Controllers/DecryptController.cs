@@ -12,15 +12,25 @@ namespace stegPOC.Controllers
 {
     public class DecryptController : Controller
     {
-        // GET: Decrypt
         public async Task<ActionResult> Index(string albumId)
+        {
+            ViewBag.albumId = albumId;
+            return View("SetEncKey");
+        }
+
+        public async Task<ActionResult> Decrypt(string albumId, string encryptionKey)
+        {
+            ViewBag.albumId = albumId;
+            ViewBag.encryptionKey = encryptionKey;
+            return View();
+        }
+        // GET: Decrypt
+        public async Task<ActionResult> GetImage(string albumId, string encryptionKey)
         {
             DirectoryInfo dInfo = new DirectoryInfo(@"C:\cats");
 
             var urlList = await imgurConnector.getPhotoIdsFromAlbum(albumId);
             var otherlist = imgurConnector.idList;
-
-            string password = "banana";
 
             byte[] image = new byte[0];
 
@@ -41,7 +51,7 @@ namespace stegPOC.Controllers
 
                         using (var outputStream = new MemoryStream())
                         {
-                            using (JpegExtract extractor = new JpegExtract(outputStream, password))
+                            using (JpegExtract extractor = new JpegExtract(outputStream, encryptionKey))
                             {
                                 extractor.Extract(inputStream);
 

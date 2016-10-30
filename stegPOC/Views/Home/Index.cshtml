@@ -10,6 +10,8 @@
 }
 @using (Html.BeginForm("Upload","Home",FormMethod.Post, new { name="evilfile", enctype="multipart/form-data"}))
 {
+    <input typeof="text" id="encryptionKey" name="encryptionKey" />
+
     <input type="file" id="evilfile" name="evilfile" />
 
     <input type="submit" />
